@@ -1,8 +1,10 @@
 import pytest
 import pymysql
+import allure
 
-#Дебетовая карта
-def test_payment_approved_record_exists(sql_connect):
+@allure.epic("Тесты БД")
+@allure.title("Платеж по карте одобрен, маскировка номера карты") 
+def test_payment_approved_record_exists(sql_connect, setup_test_data):
     with sql_connect.cursor() as cursor:
         cursor.execute("SELECT * FROM payment_entity WHERE status = 'APPROVED' ORDER BY id DESC LIMIT 1")
         record = cursor.fetchone()
@@ -11,8 +13,9 @@ def test_payment_approved_record_exists(sql_connect):
     assert record.get("card_number") is None or "****" in str(record.get("card_number", "")), \
         f"Номер карты не замаскирован!"
     
-#Кредитная карта
-def test_credit_approved_record_exists(sql_connect):
+@allure.epic("Тесты БД")
+@allure.title("Кредит по данным карты одобрен, маскировка номера карты") 
+def test_credit_approved_record_exists(sql_connect, setup_test_data):
     with sql_connect.cursor() as cursor:
         cursor.execute("SELECT * FROM credit_request_entity WHERE status = 'APPROVED' ORDER BY id DESC LIMIT 1")
         record = cursor.fetchone()

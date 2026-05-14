@@ -1,0 +1,51 @@
+
+#version: '3.8'
+
+services:
+  # 1. База данных MySQL
+  mysql:
+    image: mysql:8.0
+  
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: pass
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # 2. Эмулятор банка (Node.js)
+  gate-simulator:
+    image: node:16-alpine
+    ports:
+      - "9999:9999"
+    volumes:
+      - ./gate-simulator:/app
+    working_dir: /app
+    command: sh -c "npm install && npm start"
+
+  # 3. Приложение
+  aqa-shop:
+    image: eclipse-temurin:11-jre
+    depends_on:
+      mysql:
+        condition: service_healthy
+      gate-simulator:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./run/aqa-shop.jar:/app/app.jar
+      - ./run/application.properties:/app/application.properties
+    working_dir: /app
+    command: java -jar app.jar
+    restart: on-failure
+
+volumes:
+  mysql_data:

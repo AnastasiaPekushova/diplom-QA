@@ -1,4 +1,5 @@
 import pytest
+import allure
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -7,8 +8,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 
-# Тесты для кнопки "Купить"
 
+@allure.epic("Тесты для кнопки 'Купить'")
+@allure.title("Валидация поля номер карты") 
+@allure.description("Поле номер карты")
 @pytest.mark.parametrize("invalid_data, error_text, type", [("", "Неверный формат", "validation"), ("карта", "Неверный формат", "validation"), ("carta", "Неверный формат", "validation"), ("!@#", "Неверный формат", "validation"), ("123456789012345", "Неверный формат", "validation"), ("12345678901234567", "Неверный формат", "len")])
 def test_card_number_validation_debet(brauser, base_url, valid_data, invalid_data, error_text, type):
 
@@ -58,7 +61,8 @@ def test_card_number_validation_debet(brauser, base_url, valid_data, invalid_dat
         now = card_field.get_attribute("value").replace(" ", "")
         assert len(now) == 16
 
-
+@allure.epic("Тесты для кнопки 'Купить'")
+@allure.title("Валидация поля месяц") 
 @pytest.mark.parametrize("invalid_data, error_text, type", [("", "Неверный формат", "validation"), ("карта", "Неверный формат", "validation"), ("carta", "Неверный формат", "validation"), ("!@#", "Неверный формат", "validation"), ("1", "Неверный формат", "validation"), ("123", "Неверный формат", "len"), ("13", "Неверно указан срок действия карты", "validation"), ("00", "Неверно указан срок действия карты", "validation")])
 #Месяц в формате 00 - баг. Я ничего не стала делать, дала тесту упасть. Верно такое поведение? И на кнопке "Купить в кредит" так же
 def test_month_validation_debet(brauser, base_url, valid_data, invalid_data, error_text, type, card_data):
@@ -109,7 +113,8 @@ def test_month_validation_debet(brauser, base_url, valid_data, invalid_data, err
         now = card_field.get_attribute("value").replace(" ", "")
         assert len(now) == 2
 
-
+@allure.epic("Тесты для кнопки 'Купить'")
+@allure.title("Валидация поля год") 
 @pytest.mark.parametrize("invalid_data, error_text, type", [("", "Неверный формат", "validation"), ("карта", "Неверный формат", "validation"), ("carta", "Неверный формат", "validation"), ("!@#", "Неверный формат", "validation"), ("1", "Неверный формат", "validation"), ("123", "Неверный формат", "len"), ("25", "Истёк срок действия карты", "validation")])
 def test_year_validation_debet(brauser, base_url, valid_data, invalid_data, error_text, type, card_data):
     
@@ -159,7 +164,8 @@ def test_year_validation_debet(brauser, base_url, valid_data, invalid_data, erro
         now = card_field.get_attribute("value").replace(" ", "")
         assert len(now) == 2
 
-
+@allure.epic("Тесты для кнопки 'Купить'")
+@allure.title("Валидация поля владелец") 
 @pytest.mark.parametrize("invalid_data, error_text", [("", "Поле обязательно для заполнения"), ("123", "Неверный формат"), ("!№;", "Неверный формат"), ("N", "Неверный формат"), ("Д", "Неверный формат")])
 # У поля владелец нет никаких ограничений кроме пустого поля. Получается 4 параметра упадут и каждый нужно оформить в баг-репорт? На кнопке "Купить в кредит" поле отрабатывает так же
 def test_owner_validation_debet(brauser, base_url, valid_data, invalid_data, error_text, card_data):
@@ -205,7 +211,8 @@ def test_owner_validation_debet(brauser, base_url, valid_data, invalid_data, err
     error = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".input__sub")))
     assert error_text in error.text
 
-
+@allure.epic("Тесты для кнопки 'Купить'")
+@allure.title("Валидация поля CVC/CVV") 
 @pytest.mark.parametrize("invalid_data, error_text, type", [("", "Неверный формат", "validation"), ("карта", "Неверный формат", "validation"), ("carta", "Неверный формат", "validation"), ("!@#", "Неверный формат", "validation"), ("12", "Неверный формат", "validation"), ("1234", "Неверный формат", "len"), pytest.param("000", "Неверный формат", "validation", marks=pytest.mark.xfail(reason="Баг: форма принимает cvc = 000"))])
 #Здесь баг - форма принимает значение 000. Я применила маркировку xfail, не знаю надо так в принципе делать или нет, поэтому сделала только на этом баге и на кнопке "Купить в кредит"
 def test_cvc_validation_debet(brauser, base_url, valid_data, invalid_data, error_text, type, card_data):
@@ -256,8 +263,9 @@ def test_cvc_validation_debet(brauser, base_url, valid_data, invalid_data, error
         now = card_field.get_attribute("value").replace(" ", "")
         assert len(now) == 3
 
-#Тесты для кнопки "Купить в кредит"
 
+@allure.epic("Тесты для кнопки 'Купить в кредит'")
+@allure.title("Валидация поля номер карты") 
 @pytest.mark.parametrize("invalid_data, error_text, type", [("", "Неверный формат", "validation"), ("карта", "Неверный формат", "validation"), ("carta", "Неверный формат", "validation"), ("!@#", "Неверный формат", "validation"), ("123456789012345", "Неверный формат", "validation"), ("12345678901234567", "Неверный формат", "len")])
 def test_card_number_validation_credit(brauser, base_url, valid_data, invalid_data, error_text, type):
 
@@ -307,8 +315,9 @@ def test_card_number_validation_credit(brauser, base_url, valid_data, invalid_da
         now = card_field.get_attribute("value").replace(" ", "")
         assert len(now) == 16
 
-
-@pytest.mark.parametrize("invalid_data, error_text, type", [("", "Неверный формат", "validation"), ("карта", "Неверный формат", "validation"), ("carta", "Неверный формат", "validation"), ("!@#", "Неверный формат", "validation"), ("1", "Неверный формат", "validation"), ("123", "Неверный формат", "len"), ("13", "Неверно указан срок действия карты", "validation"), ("00", "Неверный формат", "validation")])
+@allure.epic("Тесты для кнопки 'Купить в кредит'")
+@allure.title("Валидация поля месяц")
+@pytest.mark.parametrize("invalid_data, error_text, type", [("", "Неверный формат", "validation"), ("карта", "Неверный формат", "validation"), ("carta", "Неверный формат", "validation"), ("!@#", "Неверный формат", "validation"), ("1", "Неверный формат", "validation"), ("123", "Неверный формат", "len"), ("13", "Неверно указан срок действия карты", "validation"), ("00", "Неверно указан срок действия карты", "validation")])
 def test_month_validation_credit(brauser, base_url, valid_data, invalid_data, error_text, type, card_data):
 
     brauser.get(base_url)
@@ -357,7 +366,8 @@ def test_month_validation_credit(brauser, base_url, valid_data, invalid_data, er
         now = card_field.get_attribute("value").replace(" ", "")
         assert len(now) == 2
 
-
+@allure.epic("Тесты для кнопки 'Купить в кредит'")
+@allure.title("Валидация поля год")
 @pytest.mark.parametrize("invalid_data, error_text, type", [("", "Неверный формат", "validation"), ("карта", "Неверный формат", "validation"), ("carta", "Неверный формат", "validation"), ("!@#", "Неверный формат", "validation"), ("1", "Неверный формат", "validation"), ("123", "Неверный формат", "len"), ("25", "Истёк срок действия карты", "validation")])
 def test_year_validation_credit(brauser, base_url, valid_data, invalid_data, error_text, type, card_data):
     
@@ -407,7 +417,8 @@ def test_year_validation_credit(brauser, base_url, valid_data, invalid_data, err
         now = card_field.get_attribute("value").replace(" ", "")
         assert len(now) == 2
 
-
+@allure.epic("Тесты для кнопки 'Купить в кредит'")
+@allure.title("Валидация поля владелец")
 @pytest.mark.parametrize("invalid_data, error_text", [("", "Поле обязательно для заполнения"), ("123", "Неверный формат"), ("!№;", "Неверный формат"), ("N", "Неверный формат"), ("Д", "Неверный формат")])
 def test_owner_validation_credit(brauser, base_url, valid_data, invalid_data, error_text, card_data):
     
@@ -452,7 +463,8 @@ def test_owner_validation_credit(brauser, base_url, valid_data, invalid_data, er
     error = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".input__sub")))
     assert error_text in error.text
 
-
+@allure.epic("Тесты для кнопки 'Купить в кредит'")
+@allure.title("Валидация поля CVC/CVV")
 @pytest.mark.parametrize("invalid_data, error_text, type", [("", "Неверный формат", "validation"), ("карта", "Неверный формат", "validation"), ("carta", "Неверный формат", "validation"), ("!@#", "Неверный формат", "validation"), ("12", "Неверный формат", "validation"), ("1234", "Неверный формат", "len"), pytest.param("000", "Неверный формат", "validation", marks=pytest.mark.xfail(reason="Баг: форма принимает cvc = 000"))])
 def test_cvc_validation_credit(brauser, base_url, valid_data, invalid_data, error_text, type, card_data):
     

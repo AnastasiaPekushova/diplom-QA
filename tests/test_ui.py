@@ -1,5 +1,6 @@
 
 import pytest
+import allure
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -10,7 +11,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 
 
-# Карта 41 купить без мам, пап и кредитов
+@allure.epic("UI-тесты")
+@allure.title(" Оплата по карте 4444 4444 4444 44441 ")
 def test_payment_approved_debet(brauser, base_url,valid_data,card_data):
 
     brauser.get(base_url)
@@ -57,7 +59,8 @@ def test_payment_approved_debet(brauser, base_url,valid_data,card_data):
     assert "Успешно" in success_message.text
 
    
-# Карта 41 купить в кредит  
+@allure.epic("UI-тесты")
+@allure.title(" Кредит по данным карты 4444 4444 4444 44441 ") 
 def test_payment_approved_credit(brauser, base_url,valid_data,card_data):
 
     brauser.get(base_url)
@@ -104,7 +107,8 @@ def test_payment_approved_credit(brauser, base_url,valid_data,card_data):
     assert "Успешно" in success_message.text
 
 
-# Карта 42 купить как большой
+@allure.epic("UI-тесты")
+@allure.title(" Оплата по карте 4444 4444 4444 44442 ")
 def test_payment_declined_debet(brauser, base_url, valid_data, card_data):
 
     brauser.get(base_url)
@@ -151,7 +155,8 @@ def test_payment_declined_debet(brauser, base_url, valid_data, card_data):
     assert "Ошибка" in error_message.text
 
 
-# Карта 42 купить в кредит
+@allure.epic("UI-тесты")
+@allure.title(" Кредит по данным карты 4444 4444 4444 44442 ") 
 def test_payment_declined_credit(brauser, base_url, valid_data, card_data):
 
     brauser.get(base_url)
