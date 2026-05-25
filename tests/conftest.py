@@ -3,7 +3,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-#from selenium.webdriver.support.iu import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import pymysql
@@ -46,7 +45,6 @@ def card_data():
 @pytest.fixture(scope="session") # Подключение к БД
 def sql_connect():
     conn = pymysql.connect(
-        #host = "mysql",
         host = "localhost",
         user = "app",
         password = "pass",
